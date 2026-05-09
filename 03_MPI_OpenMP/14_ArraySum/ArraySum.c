@@ -2,15 +2,24 @@
 #include <omp.h>
 
 int main() {
+
     int n, i, sum = 0;
+
     printf("Enter number of elements: ");
+
     scanf("%d", &n);
+
     int arr[n];
+
     printf("Enter array elements:\n");
+
     for(i = 0; i < n; i++) {
+
         scanf("%d", &arr[i]);
     }
-    #pragma omp parallel{
+
+    #pragma omp parallel
+    {
         int local_sum = 0;
 
         int thread_id = omp_get_thread_num();
