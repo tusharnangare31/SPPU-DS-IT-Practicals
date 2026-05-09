@@ -1,0 +1,8 @@
+module StringApp {
+	interface StringOperation {
+		long length(in string str);
+		string reverse(in string str);
+		string toUpper(in string str);
+		string toLower(in string str);
+	};
+};
