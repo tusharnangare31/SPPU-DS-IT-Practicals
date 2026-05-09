@@ -24,7 +24,7 @@ Parallel processing divides a task into multiple smaller tasks and executes them
 OpenMP (Open Multi-Processing) is an API used for shared memory multiprocessing programming in C/C++.
 
 In this practical:
-- Array elements are divided among processors/threads.
+- Array elements are divided among threads.
 - Each thread calculates partial sum.
 - Partial sums are combined to produce final sum.
 
@@ -87,6 +87,8 @@ int main() {
         scanf("%d", &arr[i]);
     }
 
+    omp_set_num_threads(4);
+
     #pragma omp parallel
     {
         int local_sum = 0;
@@ -140,23 +142,17 @@ gcc -fopenmp ArraySum.c -o ArraySum
 # SAMPLE OUTPUT
 
 ```text
-Enter number of elements: 8
+Enter number of elements: 6
+
 Enter array elements:
-1
-2
-3
-4
-5
-6
-7
-8
+1 2 3 4 5 6
 
 Thread 0 calculated partial sum = 3
 Thread 1 calculated partial sum = 7
-Thread 2 calculated partial sum = 11
-Thread 3 calculated partial sum = 15
+Thread 2 calculated partial sum = 5
+Thread 3 calculated partial sum = 6
 
-Final Sum = 36
+Final Sum = 21
 ```
 
 ---

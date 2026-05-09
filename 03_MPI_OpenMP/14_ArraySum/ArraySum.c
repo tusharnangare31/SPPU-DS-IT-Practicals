@@ -18,6 +18,8 @@ int main() {
         scanf("%d", &arr[i]);
     }
 
+    omp_set_num_threads(4);
+
     #pragma omp parallel
     {
         int local_sum = 0;
