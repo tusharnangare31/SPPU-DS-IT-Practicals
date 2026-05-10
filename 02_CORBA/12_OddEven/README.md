@@ -281,6 +281,65 @@ Result: Even
 
 ---
 
+# SERVER MACHINE (EC2)
+
+## Generate CORBA Files
+
+```bash
+idlj -fall OddEven.idl
+```
+
+---
+
+## Compile
+
+```bash
+javac *.java OddEvenApp/*.java
+```
+
+---
+
+## Start ORBD
+
+```bash
+orbd -ORBInitialPort 1050 -ORBInitialHost <your_server_ip>&
+```
+
+---
+
+## Run Server
+
+```bash
+java OddEvenServer -ORBInitialPort 1050 -ORBInitialHost <your_server_ip>
+```
+
+---
+
+# CLIENT MACHINE
+
+## Generate CORBA Files
+
+```bash
+idlj -fall OddEven.idl
+```
+
+---
+
+## Compile
+
+```bash
+javac *.java OddEvenApp/*.java
+```
+
+---
+
+## Run Client
+
+```bash
+java OddEvenClient -ORBInitialPort 1050 -ORBInitialHost <your_server_ip>
+```
+---
+
 # ADVANTAGES
 
 - Platform independent

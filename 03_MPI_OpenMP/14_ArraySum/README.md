@@ -11,7 +11,7 @@ To develop a distributed system to find sum of N elements in an array by distrib
 # OBJECTIVE
 
 - To understand parallel and distributed computing.
-- To implement array sum using OpenMP.
+- To implement array sum using OpenMP and Java Threads.
 - To distribute array elements among processors.
 - To calculate intermediate sums using multiple threads.
 
@@ -22,6 +22,8 @@ To develop a distributed system to find sum of N elements in an array by distrib
 Parallel processing divides a task into multiple smaller tasks and executes them simultaneously using multiple processors or threads.
 
 OpenMP (Open Multi-Processing) is an API used for shared memory multiprocessing programming in C/C++.
+
+Java Threads can also be used to simulate distributed processing by dividing tasks among multiple threads.
 
 In this practical:
 - Array elements are divided among threads.
@@ -38,7 +40,8 @@ Advantages:
 # SOFTWARE REQUIREMENTS
 
 - GCC Compiler with OpenMP Support
-- Linux / Ubuntu
+- Java JDK 8 or above
+- Linux / Ubuntu / Windows / macOS
 - Terminal
 
 ---
@@ -54,7 +57,7 @@ Advantages:
 
 1. Read number of elements.
 2. Store array elements.
-3. Divide array among threads.
+3. Divide array among threads/processors.
 4. Each thread calculates partial sum.
 5. Display intermediate sums.
 6. Combine all partial sums.
@@ -63,6 +66,8 @@ Advantages:
 ---
 
 # PROGRAM CODE
+
+# C PROGRAM USING OPENMP
 
 ## ArraySum.c
 
@@ -123,7 +128,103 @@ int main() {
 
 ---
 
+# JAVA PROGRAM USING THREADS
+
+## ArraySum.java
+
+```java
+import java.util.Scanner;
+
+public class ArraySum extends Thread {
+
+    static int arr[];
+    static int sum = 0;
+
+    int start, end;
+    int localSum = 0;
+
+    ArraySum(int start, int end) {
+
+        this.start = start;
+        this.end = end;
+    }
+
+    public void run() {
+
+        for(int i = start; i < end; i++) {
+
+            localSum += arr[i];
+        }
+
+        System.out.println(Thread.currentThread().getName() +
+                " calculated partial sum = " + localSum);
+
+        synchronized(ArraySum.class) {
+
+            sum += localSum;
+        }
+    }
+
+    public static void main(String[] args) throws Exception {
+
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter number of elements: ");
+
+        int n = sc.nextInt();
+
+        arr = new int[n];
+
+        System.out.println("Enter array elements:");
+
+        for(int i = 0; i < n; i++) {
+
+            arr[i] = sc.nextInt();
+        }
+
+        int numThreads = 4;
+
+        ArraySum threads[] = new ArraySum[numThreads];
+
+        int part = n / numThreads;
+
+        for(int i = 0; i < numThreads; i++) {
+
+            int start = i * part;
+
+            int end;
+
+            if(i == numThreads - 1) {
+
+                end = n;
+            }
+            else {
+
+                end = start + part;
+            }
+
+            threads[i] = new ArraySum(start, end);
+
+            threads[i].start();
+        }
+
+        for(int i = 0; i < numThreads; i++) {
+
+            threads[i].join();
+        }
+
+        System.out.println("\nFinal Sum = " + sum);
+
+        sc.close();
+    }
+}
+```
+
+---
+
 # COMPILATION
+
+## C Program
 
 ```bash
 gcc -fopenmp ArraySum.c -o ArraySum
@@ -131,10 +232,28 @@ gcc -fopenmp ArraySum.c -o ArraySum
 
 ---
 
+## Java Program
+
+```bash
+javac ArraySum.java
+```
+
+---
+
 # EXECUTION
+
+## C Program
 
 ```bash
 ./ArraySum
+```
+
+---
+
+## Java Program
+
+```bash
+java ArraySum
 ```
 
 ---
@@ -186,13 +305,13 @@ Final Sum = 21
 
 # RESULT
 
-The distributed system to find sum of array elements using OpenMP was successfully implemented and executed.
+The distributed system to find sum of array elements using OpenMP and Java Threads was successfully implemented and executed.
 
 ---
 
 # CONCLUSION
 
-The OpenMP program successfully demonstrated distributed computation by dividing array elements among processors and calculating intermediate sums in parallel.
+The OpenMP and Java Thread programs successfully demonstrated distributed computation by dividing array elements among processors and calculating intermediate sums in parallel.
 
 ---
 

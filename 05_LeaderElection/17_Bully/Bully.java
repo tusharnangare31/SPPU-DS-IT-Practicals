@@ -28,7 +28,22 @@ public class Bully {
 
         System.out.println("\nCurrent Coordinator: P" + coordinator);
 
-        System.out.print("\nEnter process which initiates election: ");
+        System.out.print("\nEnter failed coordinator process: ");
+
+        int failed = sc.nextInt();
+
+        if(failed != coordinator) {
+
+            System.out.println("\nCoordinator is alive. No election needed.");
+
+            sc.close();
+
+            return;
+        }
+
+        System.out.println("\nProcess P" + failed + " failed");
+
+        System.out.print("\nEnter process initiating election: ");
 
         int initiator = sc.nextInt();
 
@@ -36,14 +51,27 @@ public class Bully {
 
         for(int i = initiator; i < n; i++) {
 
-            System.out.println("P" + initiator +
-                    " sends Election message to P" +
-                    processes[i]);
+            if(processes[i] != failed) {
+
+                System.out.println("P" + initiator +
+                        " sends Election message to P" +
+                        processes[i]);
+            }
         }
 
-        coordinator = n;
+        for(int i = n - 1; i >= 0; i--) {
+
+            if(processes[i] != failed) {
+
+                coordinator = processes[i];
+
+                break;
+            }
+        }
 
         System.out.println("\nProcess P" + coordinator +
                 " becomes new Coordinator");
+
+        sc.close();
     }
 }

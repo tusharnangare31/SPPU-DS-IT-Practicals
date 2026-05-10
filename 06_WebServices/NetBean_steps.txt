@@ -1,0 +1,347 @@
+1) If output is not visible --> Window -> output
+
+2) File -> New Project -> Java Web -> Web Application -> Next -> Project Name (Assignment-7)
+-> Next -> GlassFishServer -> Java EE version = Java EE 7 Web -> Finish
+
+3) Tools -> Option -> Font & Color's -> Click right side icon -> Lucida sans -- size 18 -> Ok
+
+4) Created Folder -> Right Click -> New -> Web Service -> Name it (MyCalculatorWebService) -> Package (com.myservice) -> Create from scratch -> Finish
+
+5) Right click on Web Services MyCalculatorWebService -> Add operation -> Give name (lowercase) and return datatype -> Click Add in Parameters with datatype -> Ok
+
+6) Right Click on the project name(Main Folder) -> Build -> Deploy
+
+7) Click + on Web Service and select MyCalculatorWebService and right click -> Test web service
+
+8) Click on Created Project for Client -> New Project -> Name (CalculatorWebServiceClient) -> java web -> web App -> next -> finish
+
+9) Window -> ide tools -> pallet -> drag form to body -> Name (CalculatorServlet) -> Write Code
+
+10) Right click on Web_Service_Client (Main Folder) -> New -> Web Service Client -> Browse and click + for MyCalculatorWebService in Web Service -> ok -> finish
+
+11) Copy the form action name (CalculatorServlet) -> Click on Client Web Service (CalculatorWebServiceClient)-> New -> servlet -> Name it as copied name (CalculatorServlet) -> Next -> Add info to deployment description -> finish
+
+12) Click + icon on Web_Servic_References -> Click + icon on MyCalculatorService -> Click + icon on MyCalculatorService -> Click + icon on MyCalculatorService -> Drag to servlet.java -> initialize the var's the code and html code (Note - The name or parameter should be same as the name given in the index.html input tag)
+
+13) Click on Client Web_Service_Client -> Clean & build
+
+14) Go to Web_service_Client -> web page -> index.html -> open it -> right click -> run file
+
+
+if Not RUN's like Error 500
+
+Delete manually:
+
+C:\Users\sarve\Documents\NetBeansProjects\CalculatorWebServiceClient\build
+C:\Users\sarve\Documents\NetBeansProjects\CalculatorWebServiceClient\dist
+C:\Users\sarve\Documents\NetBeansProjects\CalculatorWebServiceClient\nbproject\private
+
+Then:
+
+Based on everything we debugged, here is the **proper NetBeans 8.2 + GlassFish 4.1.1 checklist** for this lab whenever you get:
+
+> `HTTP Status 500`
+> `@WebServiceRef`
+> `Failed to access the WSDL`
+> `WEB-INF/wsdl... file not found`
+
+This is the reliable process for **web service + client practicals** like Calculator, Addition, Subtraction, etc.
+
+---
+
+# Part 1 — Create Server Project
+
+## Step 1
+
+In NetBeans IDE:
+
+```txt id="s1"
+File
+→ New Project
+→ Java Web
+→ Web Application
+```
+
+Project name:
+
+```txt id="s2"
+Assignment-7
+```
+
+Choose:
+
+```txt id="s3"
+Server = GlassFish Server 4.1.1
+Java EE = Java EE 7 Web
+```
+
+---
+
+## Step 2 — Create Web Service
+
+```txt id="s4"
+Right click project
+→ New
+→ Web Service
+```
+
+Name:
+
+```txt id="s5"
+MyCalculatorWebService
+```
+
+Package:
+
+```txt id="s6"
+com.myservice
+```
+
+---
+
+## Step 3 — Add operations
+
+```txt id="s7"
+Right click MyCalculatorWebService
+→ Add Operation
+```
+
+Examples:
+
+```txt id="s8"
+addition
+subtraction
+multiplication
+division
+```
+
+---
+
+## Step 4 — Deploy first
+
+**Important: always deploy server first**
+
+```txt id="s9"
+Right click Assignment-7
+→ Clean and Build
+→ Deploy
+```
+
+---
+
+## Step 5 — Verify WSDL
+
+Right click:
+
+```txt id="s10"
+Web Services
+→ MyCalculatorWebService
+→ Test Web Service
+```
+
+Browser opens:
+
+```txt id="s11"
+...?Tester
+```
+
+Now manually change:
+
+```txt id="s12"
+?Tester
+```
+
+to:
+
+```txt id="s13"
+?wsdl
+```
+
+You must see XML:
+
+```xml id="s14"
+<?xml version="1.0"
+```
+
+If not XML → stop and fix server first.
+
+---
+
+# Part 2 — Create Client Project
+
+## Step 6
+
+Create client project:
+
+```txt id="c1"
+CalculatorWebServiceClient
+```
+
+---
+
+## Step 7 — Add Web Service Client
+
+**Never use "Browse Project"**
+
+Use:
+
+```txt id="c2"
+Right click client
+→ New
+→ Web Service Client
+→ WSDL URL
+```
+
+Paste:
+
+```txt id="c3"
+http://localhost:8080/Assignment-7/MyCalculatorWebService?wsdl
+```
+
+NOT:
+
+```txt id="c4"
+?Tester
+```
+
+Using `?Tester` causes the HTML parsing error we saw:
+
+> `attribute "lang" associated with element type "HTML"`
+
+---
+
+## Step 8 — Verify reference
+
+Under:
+
+```txt id="c5"
+Web Service References
+```
+
+You should see:
+
+```txt id="c6"
+MyCalculatorWebService
+```
+
+NOT:
+
+```txt id="c7"
+MyCalculatorWebService_Tester
+```
+
+Generated package should be:
+
+```txt id="c8"
+com.myservice
+```
+
+---
+
+# Part 3 — Servlet Setup
+
+## Step 9 — Create servlet
+
+```txt id="v1"
+CalculatorServlet
+```
+
+Drag:
+
+```txt id="v2"
+Web Service References
+→ MyCalculatorWebService
+```
+
+into servlet.
+
+This matches your lab sheet. 
+
+---
+
+# Part 4 — If HTTP 500 appears
+
+## Check 1
+
+Open:
+
+```txt id="e1"
+build\web\WEB-INF\wsdl
+```
+
+If empty → this is the same bug we found.
+
+---
+
+## Fix
+
+Open `CalculatorServlet.java`.
+
+Remove:
+
+```java id="e2"
+import javax.xml.ws.WebServiceRef;
+```
+
+Remove:
+
+```java id="e3"
+@WebServiceRef(...)
+```
+
+Replace:
+
+```java id="e4"
+private MyCalculatorWebService_Service service;
+```
+
+with:
+
+```java id="e5"
+private MyCalculatorWebService_Service service =
+        new MyCalculatorWebService_Service();
+```
+
+This avoids the NetBeans/GlassFish WSDL-copy bug.
+
+---
+
+# Part 5 — Final Run
+
+## Step 10
+
+```txt id="r1"
+Right click client
+→ Clean and Build
+```
+
+Expected:
+
+```txt id="r2"
+BUILD SUCCESSFUL
+```
+
+---
+
+## Step 11
+
+```txt id="r3"
+Right click index.html
+→ Run File
+```
+
+---
+
+# Quick error mapping
+
+| Error                                  | Cause                          | Fix                     |
+| -------------------------------------- | ------------------------------ | ----------------------- |
+| `package com.myservice does not exist` | Old reference deleted          | Drag service again      |
+| `HTML lang attribute error`            | Used `?Tester` instead of WSDL | Use `?wsdl`             |
+| `WEB-INF/wsdl file not found`          | NetBeans didn’t copy WSDL      | Remove `@WebServiceRef` |
+| `MyCalculatorWebService_Tester`        | Imported tester page           | Delete and re-add       |
+| `HTTP 500 @WebServiceRef`              | Runtime injection failure      | Manual `new Service()`  |
+
+If you do these steps in order, the same fix works for **Addition, Subtraction, String operations, Odd/Even, Prime, Calculator**, etc.
+
+

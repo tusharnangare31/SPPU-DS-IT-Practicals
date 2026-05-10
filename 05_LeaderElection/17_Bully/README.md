@@ -101,7 +101,22 @@ public class Bully {
 
         System.out.println("\nCurrent Coordinator: P" + coordinator);
 
-        System.out.print("\nEnter process which initiates election: ");
+        System.out.print("\nEnter failed coordinator process: ");
+
+        int failed = sc.nextInt();
+
+        if(failed != coordinator) {
+
+            System.out.println("\nCoordinator is alive. No election needed.");
+
+            sc.close();
+
+            return;
+        }
+
+        System.out.println("\nProcess P" + failed + " failed");
+
+        System.out.print("\nEnter process initiating election: ");
 
         int initiator = sc.nextInt();
 
@@ -109,12 +124,23 @@ public class Bully {
 
         for(int i = initiator; i < n; i++) {
 
-            System.out.println("P" + initiator +
-                    " sends Election message to P" +
-                    processes[i]);
+            if(processes[i] != failed) {
+
+                System.out.println("P" + initiator +
+                        " sends Election message to P" +
+                        processes[i]);
+            }
         }
 
-        coordinator = n;
+        for(int i = n - 1; i >= 0; i--) {
+
+            if(processes[i] != failed) {
+
+                coordinator = processes[i];
+
+                break;
+            }
+        }
 
         System.out.println("\nProcess P" + coordinator +
                 " becomes new Coordinator");
@@ -156,14 +182,17 @@ P5
 
 Current Coordinator: P5
 
-Enter process which initiates election: 2
+Enter failed coordinator process: 5
+
+Process P5 failed
+
+Enter process initiating election: 2
 
 Election Process:
 P2 sends Election message to P3
 P2 sends Election message to P4
-P2 sends Election message to P5
 
-Process P5 becomes new Coordinator
+Process P4 becomes new Coordinator
 ```
 
 ---
